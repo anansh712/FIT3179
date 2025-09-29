@@ -1,0 +1,148 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Obesity Rate by State (Australia) — Mercator</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body { margin:0; font-family: system-ui, sans-serif; background:#fafafa; }
+    main { max-width:1000px; margin:16px auto 28px; padding:0 16px; }
+    #vis { min-height:560px; }
+    footer { text-align:center; font-size:0.85rem; color:#555; margin-top:12px; }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Obesity Rate by State (Australia)</h1>
+    <div id="vis"></div>
+    <footer>Source: Australian Bureau of Statistics (ABS), 2023</footer>
+  </main>
+
+  <script>
+    const TOPO_URL = "aus_states.json";
+    const CSV_URL  = "obesity_by_state.csv";
+
+    fetch(TOPO_URL).then(r => r.json()).then(topology => {
+      const featureKey = Object.keys(topology.objects || {})[0];
+
+      const projection = {
+        type: "mercator",
+        center: [134, -25],
+        scale: 800,
+        translate: [450, 280]
+      };
+
+      // Graticule
+      const graticule = {
+        data: { graticule: true },
+        mark: { type: "geoshape", stroke: "#ddd", strokeWidth: 0.5 },
+        projection
+      };
+
+      // Base map
+      const base = {
+        data: { url: TOPO_URL, format: { type: "topojson", feature: featureKey } },
+        mark: { type: "geoshape", fill: "#f2f2f2", stroke: "#cfcfcf", strokeWidth: 0.7 },
+        projection
+      };
+
+      // Choropleth — WITH FILTER
+      const choropleth = {
+        data: { url: TOPO_URL, format: { type: "topojson", feature: featureKey } },
+        transform: [
+          {
+            calculate:
+              "(datum.properties && datum.properties.name) ? datum.properties.name :" +
+              " (datum.properties && datum.properties.name_en) ? datum.properties.name_en : null",
+            as: "state_name"
+          },
+          // Filter out the extra territories
+          {
+            filter:
+              "datum.state_name !== 'Coral Sea Islands' && " +
+              "datum.state_name !== 'Jervis Bay Territory' && " +
+              "datum.state_name !== 'Ashmore and Cartier Islands'"
+          },
+          {
+            lookup: "state_name",
+            from: { data: { url: CSV_URL }, key: "State", fields: ["Obese (%)"] }
+          }
+        ],
+        mark: { type: "geoshape", stroke: "white", strokeWidth: 0.8 },
+        encoding: {
+          color: {
+            field: "Obese (%)",
+            type: "quantitative",
+            title: "Obesity (%)",
+            scale: {
+              type: "threshold",
+              domain: [27, 29, 31, 33, 35],
+              range: ["#f7fcf5","#c7e9c0","#74c476","#31a354","#006d2c","#00441b"]
+            },
+            legend: { labelFormat: ".1f" }
+          },
+          tooltip: [
+            { field: "state_name", title: "State:" },
+            { field: "Obese (%)", type: "quantitative", title: "Obesity (%):", format: ".1f" }
+          ]
+        },
+        projection
+      };
+
+      // Labels — WITH SAME FILTER and abbreviations
+      const labels = {
+        data: { url: TOPO_URL, format: { type: "topojson", feature: featureKey } },
+        transform: [
+          { calculate: "datum.properties.name || datum.properties.name_en", as: "state_name" },
+          // filter out the extras here too
+          {
+            filter:
+              "datum.state_name !== 'Coral Sea Islands' && " +
+              "datum.state_name !== 'Jervis Bay Territory' && " +
+              "datum.state_name !== 'Ashmore and Cartier Islands'"
+          },
+          { calculate: "datum.properties.longitude", as: "lon" },
+          { calculate: "datum.properties.latitude",  as: "lat" },
+          {
+            calculate: `{
+              "New South Wales": "NSW",
+              "Victoria": "VIC",
+              "Queensland": "QLD",
+              "South Australia": "SA",
+              "Western Australia": "WA",
+              "Tasmania": "TAS",
+              "Northern Territory": "NT",
+              "Australian Capital Territory": "ACT"
+            }[datum.state_name] || datum.state_name`,
+            as: "abbr"
+          }
+        ],
+        mark: { type: "text", fontSize: 11, fontWeight: "bold", dy: 2 },
+        encoding: {
+          longitude: { field: "lon" },
+          latitude:  { field: "lat" },
+          text: { field: "abbr" },
+          color: { value: "#0b2239" }
+        },
+        projection
+      };
+
+      const spec = {
+        $schema: "https://vega.github.io/schema/vega-lite/v5.json",
+        width: 900,
+        height: 630,
+        layer: [graticule, base, choropleth, labels]
+      };
+
+      vegaEmbed("#vis", spec, { actions: true }).catch(console.error);
+    }).catch(err => {
+      console.error(err);
+      document.getElementById("vis").innerHTML =
+        "<p style='color:#b00'>Could not load aus_states.json. Check the filename or export.</p>";
+    });
+  </script>
+</body>
+</html>
