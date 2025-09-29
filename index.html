@@ -22,8 +22,8 @@
   </main>
 
   <script>
-    const TOPO_URL = "aus_states.json";
-    const CSV_URL  = "obesity_by_state.csv";
+    const TOPO_URL = "https://raw.githubusercontent.com/anansh712/FIT3179/refs/heads/main/aus_states.json";
+    const CSV_URL  = "https://raw.githubusercontent.com/anansh712/FIT3179/refs/heads/main/obesity_by_state.csv";
 
     fetch(TOPO_URL).then(r => r.json()).then(topology => {
       const featureKey = Object.keys(topology.objects || {})[0];
