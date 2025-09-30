@@ -17,13 +17,17 @@
 <body>
   <main>
     <h1>Obesity Rate by State (Australia)</h1>
+    <p style="font-size:1rem; color:#444; margin-top:-10px; margin-bottom:20px;">
+      Obesity rate refers to the percentage of adults classified as obese based on their Body Mass Index (BMI ≥ 30).
+    </p>
     <div id="vis"></div>
     <footer>Source: Australian Bureau of Statistics (ABS), 2023</footer>
   </main>
 
   <script>
-    const TOPO_URL = "https://raw.githubusercontent.com/anansh712/FIT3179/refs/heads/main/aus_states.json";
-    const CSV_URL  = "https://raw.githubusercontent.com/anansh712/FIT3179/refs/heads/main/obesity_by_state.csv";
+    // raw GitHub URLs
+    const TOPO_URL = "https://raw.githubusercontent.com/anansh712/FIT3179/main/aus_states.json";
+    const CSV_URL  = "https://raw.githubusercontent.com/anansh712/FIT3179/main/obesity_by_state.csv";
 
     fetch(TOPO_URL).then(r => r.json()).then(topology => {
       const featureKey = Object.keys(topology.objects || {})[0];
@@ -82,7 +86,7 @@
               domain: [27, 29, 31, 33, 35],
               range: ["#f7fcf5","#c7e9c0","#74c476","#31a354","#006d2c","#00441b"]
             },
-            legend: { labelFormat: ".1f" }
+            legend: { labelFormat: ".1f" }   // legend config
           },
           tooltip: [
             { field: "state_name", title: "State:" },
@@ -97,7 +101,6 @@
         data: { url: TOPO_URL, format: { type: "topojson", feature: featureKey } },
         transform: [
           { calculate: "datum.properties.name || datum.properties.name_en", as: "state_name" },
-          // filter out the extras here too
           {
             filter:
               "datum.state_name !== 'Coral Sea Islands' && " +
@@ -133,15 +136,11 @@
       const spec = {
         $schema: "https://vega.github.io/schema/vega-lite/v5.json",
         width: 900,
-        height: 630,
+        height: 610,
         layer: [graticule, base, choropleth, labels]
       };
 
-      vegaEmbed("#vis", spec, { actions: true }).catch(console.error);
-    }).catch(err => {
-      console.error(err);
-      document.getElementById("vis").innerHTML =
-        "<p style='color:#b00'>Could not load aus_states.json. Check the filename or export.</p>";
+      vegaEmbed("#vis", spec, { actions: true });
     });
   </script>
 </body>
