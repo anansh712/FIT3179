@@ -1,0 +1,15 @@
+AgeGroup,Type,AverageServes
+15–17,Fruit,1.7
+15–17,Vegetables,2.1
+18–24,Fruit,1.6
+18–24,Vegetables,2.2
+25–34,Fruit,1.8
+25–34,Vegetables,2.4
+35–44,Fruit,1.9
+35–44,Vegetables,2.6
+45–54,Fruit,2.0
+45–54,Vegetables,2.7
+55–64,Fruit,2.1
+55–64,Vegetables,2.9
+65 years and over,Fruit,2.3
+65 years and over,Vegetables,3.2
