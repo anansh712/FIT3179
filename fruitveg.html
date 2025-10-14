@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Average Fruit & Vegetable Serves – Australia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body {margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#fafafa}
+    main {max-width:1000px;margin:30px auto;padding:0 16px}
+    h1 {text-align:center;margin-bottom:10px}
+    p {text-align:center;color:#555;margin-bottom:30px}
+    #vis {min-height:500px}
+    footer {text-align:center;color:#666;font-size:.9rem;margin-top:16px}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Average Fruit & Vegetable Serves per Day</h1>
+    <p>Persons (combined). Each dumbbell connects the average fruit and vegetable serves per day by age group, compared against national guidelines (2 & 5 serves).</p>
+    <div id="vis"></div>
+    <footer>Source: Australian Bureau of Statistics (ABS) – Nutrition Indicators</footer>
+  </main>
+
+  <script>
+    const spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 850,
+      "height": 420,
+      "data": { "url": "fruitveg_proportions.csv" },
+      "transform": [{ "filter": "indexof(['Fruit','Vegetables'], datum.Type) >= 0" }],
+      "layer": [
+        { "mark": {"type":"rule","strokeWidth":2,"opacity":0.5},
+          "encoding": {
+            "y": {"field":"AgeGroup","type":"nominal","title":"Age group","sort":null},
+            "x": {"aggregate":"min","field":"AverageServes","type":"quantitative","title":"Average serves/day"},
+            "x2":{"aggregate":"max","field":"AverageServes"}
+          }
+        },
+        { "mark": {"type":"point","filled":true,"size":120},
+          "encoding": {
+            "y": {"field":"AgeGroup","type":"nominal","sort":null},
+            "x": {"field":"AverageServes","type":"quantitative"},
+            "color": {"field":"Type","type":"nominal","scale":{"scheme":"set2"},"title":"Type"},
+            "tooltip": [
+              {"field":"AgeGroup"},{"field":"Type"},
+              {"field":"AverageServes","type":"quantitative","format":".1f","title":"Serves/day"}
+            ]
+          }
+        },
+        { "data": {"values":[{"v":2},{"v":5}]},
+          "mark": {"type":"rule","strokeDash":[4,4],"opacity":0.5},
+          "encoding": {"x":{"field":"v","type":"quantitative"}}
+        },
+        { "data": {"values":[{"v":2,"label":"2"},{"v":5,"label":"5"}]},
+          "mark": {"type":"text","dy":-6,"align":"center","opacity":0.7,"fontSize":11},
+          "encoding": {"x":{"field":"v","type":"quantitative"},"y":{"value":0},"text":{"field":"label"}}
+        }
+      ]
+    };
+    vegaEmbed("#vis", spec, {actions:false});
+  </script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>BMI Classification by Age and Sex – Australia</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <script src="https://cdn.jsdelivr.net/npm/vega@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-lite@5"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vega-embed@6"></script>
+  <style>
+    body {margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;background:#fafafa}
+    main {max-width:1000px;margin:30px auto;padding:0 16px}
+    h1 {text-align:center;margin-bottom:10px}
+    p {text-align:center;color:#555;margin-bottom:30px}
+    #vis {min-height:500px}
+    footer {text-align:center;color:#666;font-size:.9rem;margin-top:16px}
+  </style>
+</head>
+<body>
+  <main>
+    <h1>BMI Classification by Age Group</h1>
+    <p>Toggle sex to compare Underweight, Normal, Overweight and Obese proportions across age groups.</p>
+    <div id="vis"></div>
+    <footer>Source: Australian Bureau of Statistics (ABS) 2022 – Health Survey</footer>
+  </main>
+
+  <script>
+    const spec = {
+      "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
+      "width": 850,
+      "height": 420,
+      "data": { "url": "bmi_proportions.csv" },
+      "params": [{
+        "name": "sexSel",
+        "value": "Male",
+        "bind": { "input": "select", "options": ["Male","Female"], "name": "Sex: " }
+      }],
+      "transform": [
+        { "filter": "datum.Sex == sexSel" },
+        { "filter": "indexof(['Underweight','Normal','Overweight','Obese'], datum.Category) >= 0" }
+      ],
+      "mark": { "type": "bar", "cornerRadiusEnd": 3 },
+      "encoding": {
+        "x": { "field": "AgeGroup", "type": "nominal", "title": "Age group", "axis": {"labelAngle":0} },
+        "xOffset": { "field": "Category" },
+        "y": { "field": "Percent", "type": "quantitative", "title": "Percent (%)", "axis": {"format":".1f","grid":true} },
+        "color": {
+          "field": "Category", "type": "nominal", "title": "BMI Category",
+          "sort": ["Underweight","Normal","Overweight","Obese"],
+          "scale": {"scheme":"tableau10"}
+        },
+        "tooltip": [
+          {"field":"Sex"}, {"field":"AgeGroup","title":"Age group"},
+          {"field":"Category","title":"BMI category"},
+          {"field":"Percent","type":"quantitative","title":"Percent","format":".1f"}
+        ]
+      }
+    };
+    vegaEmbed("#vis", spec, {actions:false});
+  </script>
+</body>
+</html>
