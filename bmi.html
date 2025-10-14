@@ -25,11 +25,13 @@
   </main>
 
   <script>
+    const CSV_URL = "https://raw.githubusercontent.com/anansh712/FIT3179/main/datasets/bmi_proportions.csv";
+
     const spec = {
       "$schema": "https://vega.github.io/schema/vega-lite/v5.json",
       "width": 850,
       "height": 420,
-      "data": { "url": "bmi_proportions.csv" },
+      "data": { "url": CSV_URL },
       "params": [{
         "name": "sexSel",
         "value": "Male",
@@ -56,6 +58,7 @@
         ]
       }
     };
+
     vegaEmbed("#vis", spec, {actions:false});
   </script>
 </body>
