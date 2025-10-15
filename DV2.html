@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Australian Health Insights Dashboard (FIT3179)</title>
+
+  <link rel="stylesheet" href="https://unpkg.com/purecss@2.0.3/build/pure-min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+
+  <style>
+    :root { --card:#fff; --bg:#f7f8fa; --muted:#666; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: #222;
+      font-family: "Open Sans", system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    .page { max-width: 1200px; margin: 42px auto; padding: 0 20px; }
+
+    h1 { text-align: center; margin: 0 0 10px; }
+    .lead { text-align: center; color: #555; max-width: 900px; margin: 0 auto 34px; }
+
+    section.card {
+      background: var(--card);
+      border-radius: 10px;
+      box-shadow: 0 2px 12px rgba(0,0,0,.08);
+      padding: 24px 10px;
+      margin: 36px 0;
+      overflow: hidden;
+    }
+
+    .two-col { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
+
+    .one-fourth   { flex: 0 0 22%; max-width: 22%; padding: 20px; }
+    .three-fourth { flex: 0 0 78%; max-width: 78%; padding: 20px; }
+
+    .description h2 { margin: 0 0 10px; }
+    .description p  { margin: 0 0 12px; line-height: 1.6; }
+    .description .src { color: var(--muted); font-size: .92rem; }
+
+    iframe {
+      width: 100%;
+      aspect-ratio: 16 / 10;   
+      height: auto;
+      min-height: 800px;       
+      border: none;
+      border-radius: 8px;
+      display: block;
+      overflow: hidden;
+    }
+    iframe::-webkit-scrollbar { display: none; }
+    iframe { scrollbar-width: none; }
+
+    @media (max-width: 900px) {
+      .one-fourth, .three-fourth { flex: 0 0 100%; max-width: 100%; padding: 12px 12px; }
+      iframe { min-height: 420px; aspect-ratio: 16 / 12; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <h1>Australian Health Insights Dashboard (FIT3179)</h1>
+    <p class="lead">Visualising national patterns in obesity, activity, BMI, and nutrition across Australia (ABS &amp; AIHW, 2022).</p>
+
+    <!-- 1) Viz  -->
+    <section class="card">
+      <div class="two-col">
+        <div class="one-fourth description">
+          <h2>1. Obesity Rates by State</h2>
+          <p>Choropleth map showing the percentage of adults classified as <strong>obese</strong> in each state. Darker shades indicate higher prevalence; <strong>Tasmania</strong> and <strong>Queensland</strong> tend higher than <strong>Western Australia</strong>.</p>
+        </div>
+        <div class="three-fourth">
+          <iframe
+            src="https://anansh712.github.io/FIT3179/index.html?embed=1"
+            loading="lazy"
+            title="Obesity by State (Australia)"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2) Viz -->
+    <section class="card">
+      <div class="two-col">
+        <div class="three-fourth">
+          <iframe
+            src="https://anansh712.github.io/FIT3179/HW10/Task1.html?embed=1"
+            loading="lazy"
+            title="Days of Physical Activity by Age"></iframe>
+        </div>
+        <div class="one-fourth description">
+          <h2>2. Physical Activity by Age</h2>
+          <p>Grouped bars show the share of people reporting different <strong>days per week</strong> of physical activity. Activity levels are generally higher in younger groups and decrease with age.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3) Viz-->
+    <section class="card">
+      <div class="two-col">
+        <div class="one-fourth description">
+          <h2>3. BMI Classification by Age &amp; Sex</h2>
+          <p>Compare proportions in <strong>Underweight</strong>, <strong>Normal</strong>, <strong>Overweight</strong>, and <strong>Obese</strong> across age groups. Use the dropdown inside the chart to toggle <strong>Male</strong>/<strong>Female</strong>.</p>
+        </div>
+        <div class="three-fourth">
+          <iframe
+            src="https://anansh712.github.io/FIT3179/bmi.html?embed=1"
+            loading="lazy"
+            title="BMI Classification by Age & Sex"></iframe>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4) Viz -->
+    <section class="card">
+      <div class="two-col">
+        <div class="three-fourth">
+          <iframe
+            src="https://anansh712.github.io/FIT3179/fruitveg.html?embed=1"
+            loading="lazy"
+            title="Fruit & Vegetable Serves per Day"></iframe>
+        </div>
+        <div class="one-fourth description">
+          <h2>4. Fruit &amp; Vegetable Serves</h2>
+          <p>Dumbbell plot compares average daily <strong>fruit</strong> vs <strong>vegetable</strong> serves by age. Most groups fall short of guideline targets (~2 fruit &amp; ~5 veg/day).</p>
+        </div>
+      </div>
+    </section>
+  </div>
+</body>
+</html>
